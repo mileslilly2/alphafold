@@ -1,16 +1,32 @@
-<!DOCTYPE html>
-<html>
-
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>replit</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+  <meta charset="utf-8" />
+  <title>AlphaFold Hello World</title>
+  <style>
+    body { margin: 0 }
+    #viewer { width: 100vw; height: 100vh; }
+  </style>
+  <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
 </head>
-
 <body>
-  Hello world
-  <script src="script.js"></script>
+  <div id="viewer"></div>
+  <script>
+    const viewer = $3Dmol.createViewer("viewer", { backgroundColor: "white" });
+    fetch("https://alphafold.ebi.ac.uk/files/AF-P68871-F1-model_v4.pdb")
+      .then(r => r.text())
+      .then(pdb => {
+        viewer.addModel(pdb, "pdb");
+        // Working coloring by B-factor (pLDDT)
+        viewer.setStyle({}, {
+          cartoon: {
+            colorscheme: {prop: 'b', gradient: 'roygb', min: 50, max: 100}
+          }
+        });
+        viewer.zoomTo();
+        viewer.render();
+      })
+      .catch(err => alert("Error fetching PDB: " + err));
+  </script>
 </body>
-
 </html>
